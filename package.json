@@ -1,0 +1,35 @@
+{
+    "name": "article-scraper-api",
+    "version": "1.0.0",
+    "description": "api to scrape articles with a specific keyword from a website",
+    "main": "server.js",
+    "scripts": {
+        "dev": "nodemon server.js",
+        "test": "jest --watchAll",
+        "start": "node server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fesiddi/article-scraper-api.git"
+    },
+    "keywords": [
+        "webscraping",
+        "api",
+        "interview"
+    ],
+    "author": "Federico Siddi",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/fesiddi/article-scraper-api/issues"
+    },
+    "homepage": "https://github.com/fesiddi/article-scraper-api#readme",
+    "devDependencies": {
+        "jest": "^28.1.3",
+        "supertest": "^6.2.4"
+    },
+    "dependencies": {
+        "axios": "^0.27.2",
+        "cors": "^2.8.5",
+        "express": "^4.18.1"
+    }
+}
