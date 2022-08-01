@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Article Scraper API</title>
+    </head>
+    <body>
+        <h2>Article Scraper API Endpoints</h2>
+        <h4>GET api/articles/:id/:keyword</h4>
+        <p>
+            Search for articles with the specified keyword in the website that
+            has the id provided as parameter
+        </p>
+        <h4>POST api/websites</h4>
+        <p>
+            Add a new website where articles can be searched to the websites
+            database
+        </p>
+        <form action="/api/websites" method="post">
+            <input type="url" name="url" id="url" />
+            <button type="submit">Post Website Url</button>
+        </form>
+    </body>
+</html>

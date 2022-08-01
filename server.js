@@ -1,4 +1,15 @@
+const config = require('./utils/config');
 const app = require('./app');
-const port = 3000;
+const { connectDB } = require('./utils/dbConnection');
+const mongoose = require('mongoose');
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+// connect to the mongoDB database
+connectDB();
+
+// once connected to the db we start the server
+mongoose.connection.once('open', () => {
+    console.log('Connected to the database');
+    app.listen(config.PORT, () =>
+        console.log(`Article Scraping App listening on port ${config.PORT}!`)
+    );
+});
