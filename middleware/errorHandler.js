@@ -2,19 +2,29 @@ const errorHandler = (error, req, res, next) => {
     // this part check for duplicate key error code
     if (error.code === 11000) {
         return res.status(409).json({
-            error: 'Conflict, url is already present in the DB',
+            Error: 'Conflict, url is already present in the DB',
         });
-
         // this part check for error of url format of the req.body.url
-    } else if (error.code === 'Invalid url format') {
+    } else if (error.name === 'urlError') {
         return res.status(400).json({
-            error: 'Please provide url in the format of http://www.example.com',
+            Error: error.message,
         });
-
         // this part check for error if website does not exist
-    } else if (error.code === 'Provided url does not exists') {
+    } else if (error.name === 'timeoutError') {
         return res.status(404).json({
-            error: 'Please provide an existing url',
+            Error: error.message,
+        });
+    } else if (error.name === 'valueError') {
+        return res.status(404).json({
+            Error: error.message,
+        });
+    } else if (error.name === 'siteError') {
+        return res.status(404).json({
+            Error: error.message,
+        });
+    } else {
+        return res.status(400).json({
+            Error: error.message,
         });
     }
 };

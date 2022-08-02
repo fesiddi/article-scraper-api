@@ -2,6 +2,7 @@ const app = require('../app');
 const request = require('supertest');
 const Website = require('../model/Website');
 const { connectDB, disconnectDB } = require('../utils/dbConnection');
+const { extractArticlesFromHtml } = require('../controllers/getArticles');
 
 describe('API Endopoints Tests', () => {
     beforeAll(async () => {
@@ -10,17 +11,6 @@ describe('API Endopoints Tests', () => {
     });
     afterAll(async () => {
         await disconnectDB();
-    });
-
-    describe('GET /api/articles/:id/:keyword', () => {
-        // it('Should return json with a list of articles with keyword in the title', async () => {
-        //     const testUrl = '/api/websites/1/ferrari';
-        //     const response = await request(app)
-        //         .get(testUrl)
-        //         .expect('Content-Type', /json/)
-        //         .expect(200);
-        // });
-        // it('Should fail when invalid id is provided', () => {});
     });
 
     describe('POST /api/websites', () => {
@@ -35,6 +25,7 @@ describe('API Endopoints Tests', () => {
             expect(response.body).toEqual(
                 expect.objectContaining({
                     url: 'http://www.ansa.it/',
+                    name: 'ansa',
                     id: expect.any(String),
                 })
             );
@@ -59,5 +50,37 @@ describe('API Endopoints Tests', () => {
                 .send({ url: 'http://www.fdsafsadfdafdafsdf.com' })
                 .expect(404);
         });
+    });
+
+    describe('GET /api/articles/:siteName/:keyword', () => {
+        it('Should return with 200 if siteName is in db and a keyword is provided', async () => {
+            const testUrl = '/api/websites/ansa/ferrari';
+            const response = await request(app)
+                .get(testUrl)
+                .expect('Content-Type', /json/)
+                .expect(200);
+        });
+        it('Should fail with 404 when provided siteName is not in the db', async () => {
+            const testUrl = '/api/websites/anselmo/italia';
+            const response = await request(app).get(testUrl).expect(404);
+        });
+        it('Should fail with 404 when no keyword is provided', async () => {
+            const testUrl = '/api/websites/ansa/';
+            const response = await request(app).get(testUrl).expect(404);
+        });
+    });
+});
+
+describe('Article Parser Tests', () => {
+    it('Should return with expectedOutput array', () => {
+        const html = require('./testHelper').mockHTML;
+        const expectedOutput = require('./testHelper').expectedArticles;
+        const result = extractArticlesFromHtml(html, 'bollettino');
+        expect(result).toEqual(expectedOutput);
+    });
+    it('Should return an empty array when no articles are found', () => {
+        const html = require('./testHelper').mockHTML;
+        const result = extractArticlesFromHtml(html, 'gelato');
+        expect(result).toEqual([]);
     });
 });

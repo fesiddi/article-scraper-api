@@ -5,12 +5,16 @@ const axios = require('axios');
 // function used to check if website is existent and valid by making a get request to the url
 const verifyUrlExists = async (website) => {
     try {
-        const response = await axios.get(website.toString(), { timeout: 1500 });
+        const response = await axios.get(website.toString(), {
+            timeout: 1500,
+        });
         if (response.status === 200) {
             return website;
         }
     } catch (err) {
-        console.error(err.message);
+        const timeoutError = new Error('Exceeded timeout for reaching website');
+        timeoutError.name = 'timeoutError';
+        throw timeoutError;
     }
 };
 
@@ -20,7 +24,11 @@ const stringToUrl = (urlString) => {
         const newUrl = new URL(urlString);
         return newUrl;
     } catch (err) {
-        console.error('Error converting string to URL: ' + err.message);
+        const urlError = new Error(
+            'Error converting string to URL, provide a valid url'
+        );
+        urlError.name = 'urlError';
+        throw urlError;
     }
 };
 
@@ -28,28 +36,22 @@ const stringToUrl = (urlString) => {
 const postWebsite = async (website) => {
     // first we convert website string to an url object
     const siteUrl = stringToUrl(website);
-
-    // if formatting url didn't work, the input string in req.body.url is not in the right format
-    if (!siteUrl) {
-        const formatErr = new Error('Invalid url format');
-        formatErr.code = 'Invalid url format';
-        throw formatErr;
-    }
     try {
         // here checks if url exists by making a get request to the url
         const urlExists = await verifyUrlExists(siteUrl);
-
-        // if response.status of the get request is not 200
-        if (!urlExists) {
-            // we throw an error with the following code
-            const urlError = new Error('Provided url does not exists');
-            urlError.code = 'Provided url does not exists';
-            throw urlError;
+        // extracting the hostname part of the url
+        let hostname = urlExists.host;
+        // check if hostname contains www., if so we remove it
+        if (hostname.indexOf('www.') === 0) {
+            hostname = urlExists.host.replace('www.', '');
         }
+        // then we remove the part after the dot from the hostname variable
+        hostname = hostname.split('.')[0];
 
         // if all previous checks have passed we try to create a new entry to the DB
         const result = await Website.create({
             url: urlExists,
+            name: hostname,
         });
         return result;
     } catch (err) {

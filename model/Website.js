@@ -7,6 +7,11 @@ const websiteSchema = new Schema({
         required: true,
         unique: true,
     },
+    name: {
+        type: String,
+        required: true,
+        unique: true,
+    },
 });
 
 websiteSchema.set('toJSON', {
