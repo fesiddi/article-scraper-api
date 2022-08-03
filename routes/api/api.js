@@ -2,11 +2,18 @@ const express = require('express');
 const router = express.Router();
 const postWebsite = require('../../controllers/postWebsite');
 const { getArticles } = require('../../controllers/getArticles');
+const getWebsites = require('../../controllers/getWebsites');
 
 router
     .route('/websites')
-    .get((req, res, next) => {
-        // controller for returning all websites present in the db
+    .get(async (req, res, next) => {
+        try {
+            websitesList = await getWebsites();
+            return res.status(200).json(websitesList);
+        } catch (err) {
+            // passing error the to errorHandler middleware
+            next(err);
+        }
     })
     .post(async (req, res, next) => {
         const siteUrl = req.body.url;
@@ -23,7 +30,6 @@ router
     });
 
 router.get('/websites/:siteName/:keyword', async (req, res, next) => {
-    // controller for scraping keyword from website
     const siteName = req.params.siteName;
     const keyword = req.params.keyword;
     if (!siteName || !keyword) {
