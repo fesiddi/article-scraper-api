@@ -6,7 +6,9 @@
     "scripts": {
         "start": "cross-env NODE_ENV=production node server.js",
         "dev": "cross-env NODE_ENV=development nodemon server.js",
-        "test": "cross-env NODE_ENV=test jest --forceExit"
+        "test": "cross-env NODE_ENV=test jest --forceExit",
+        "deploy": "git push heroku main",
+        "logs:prod": "heroku logs --tail"
     },
     "repository": {
         "type": "git",
