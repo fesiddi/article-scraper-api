@@ -12,6 +12,7 @@ describe('API Endopoints Tests', () => {
         await Website.deleteMany({});
     });
     afterAll(async () => {
+        await Website.deleteMany({});
         await disconnectDB();
     });
 
