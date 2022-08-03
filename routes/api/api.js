@@ -29,9 +29,9 @@ router
         }
     });
 
-router.get('/websites/:siteName/:keyword', async (req, res, next) => {
-    const siteName = req.params.siteName;
-    const keyword = req.params.keyword;
+router.get('/articles/', async (req, res, next) => {
+    const siteName = req.query.siteName;
+    const keyword = req.query.keyword;
     if (!siteName || !keyword) {
         return res.status(400).json({ Error: 'A parameter is missing' });
     }
@@ -43,5 +43,21 @@ router.get('/websites/:siteName/:keyword', async (req, res, next) => {
         next(err);
     }
 });
+
+// OLD ENDPOINT FOR GETTING ARTICLES
+// router.get('/websites/:siteName/:keyword', async (req, res, next) => {
+//     const siteName = req.params.siteName;
+//     const keyword = req.params.keyword;
+//     if (!siteName || !keyword) {
+//         return res.status(400).json({ Error: 'A parameter is missing' });
+//     }
+//     try {
+//         const result = await getArticles(siteName, keyword);
+//         return res.status(200).json(result);
+//     } catch (err) {
+//         // passing error the to errorHandler middleware
+//         next(err);
+//     }
+// });
 
 module.exports = router;

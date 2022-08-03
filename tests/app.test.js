@@ -72,21 +72,22 @@ describe('API Endopoints Tests', () => {
         });
     });
 
-    describe('GET /api/websites/:siteName/:keyword', () => {
+    describe('GET /api/articles/?siteName=&keyword=', () => {
         it('Should return with 200 if siteName is in db and a keyword is provided', async () => {
-            const testUrl = '/api/websites/ansa/ferrari';
+            const testUrl = '/api/articles/?siteName=ansa&keyword=ferrari';
             const response = await api
                 .get(testUrl)
                 .expect('Content-Type', /json/)
                 .expect(200);
+            expect(response.body).toEqual(expect.arrayContaining([]));
         });
         it('Should fail with 404 when provided siteName is not in the db', async () => {
-            const testUrl = '/api/websites/anselmo/italia';
+            const testUrl = '/api/articles/?siteName=anselmo&keyword=italia';
             const response = await api.get(testUrl).expect(404);
         });
-        it('Should fail with 404 when no keyword is provided', async () => {
-            const testUrl = '/api/websites/ansa/';
-            const response = await api.get(testUrl).expect(404);
+        it('Should fail with 400 when no keyword is provided', async () => {
+            const testUrl = '/api/articles/?siteName=ansa&keyword=';
+            const response = await api.get(testUrl).expect(400);
         });
     });
 });
