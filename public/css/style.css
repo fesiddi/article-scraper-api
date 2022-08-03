@@ -1,20 +1,32 @@
 body {
     color: #3a3b3c;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: medium;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    font-size: 1em;
     margin-top: 2em;
     margin-left: 2em;
 }
 
 h2 {
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
 }
 
 button {
-    border: 1px solid black;
-    border-radius: 3px;
+    background: #006098;
+    color: white;
+    border-style: outset;
+    border-radius: 5px;
+    padding: 5px 10px;
+    border-color: #006098;
+    text-shadow: none;
 }
 
 input {
-    border: 1px solid black;
-    border-radius: 3px;
+    padding: 8px 10px;
+    border: none;
+    box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.107);
+    border-radius: 5px;
+    box-shadow: black;
 }
