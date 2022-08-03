@@ -11,7 +11,7 @@ on:
 
 env:
     DB_URI: ${{secrets.DB_URI}}
-    TEST_DB_URI: ${{secrets.DB_URI}}
+    TEST_DB_URI: ${{secrets.TEST_DB_URI}}
     PORT: ${{secrets.PORT}}
 jobs:
     build:
