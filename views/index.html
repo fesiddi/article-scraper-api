@@ -4,14 +4,21 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="css/style.css" rel="stylesheet" type="text/css" />
         <title>Article Scraper API</title>
     </head>
     <body>
         <h2>Article Scraper API Endpoints</h2>
-        <h4>GET api/articles/:id/:keyword</h4>
+        <h4>GET api/websites</h4>
         <p>
-            Search for articles with the specified keyword in the website that
-            has the id provided as parameter
+            Retrieve list of websites where is it possible to search for
+            articles
+        </p>
+        <h4>GET api/websites/:siteName/:keyword</h4>
+        <p>
+            Search for articles in the website provided as siteName parameter.
+            Will return a list of articles that have the keyword in the article
+            heading
         </p>
         <h4>POST api/websites</h4>
         <p>
@@ -19,7 +26,12 @@
             database
         </p>
         <form action="/api/websites" method="post">
-            <input type="url" name="url" id="url" />
+            <input
+                type="url"
+                name="url"
+                id="url"
+                placeholder="ex: http://ansa.it"
+            />
             <button type="submit">Post Website Url</button>
         </form>
     </body>

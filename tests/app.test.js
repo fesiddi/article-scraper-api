@@ -72,7 +72,7 @@ describe('API Endopoints Tests', () => {
         });
     });
 
-    describe('GET /api/articles/:siteName/:keyword', () => {
+    describe('GET /api/websites/:siteName/:keyword', () => {
         it('Should return with 200 if siteName is in db and a keyword is provided', async () => {
             const testUrl = '/api/websites/ansa/ferrari';
             const response = await api
