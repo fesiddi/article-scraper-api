@@ -46,12 +46,13 @@ const postWebsite = async (website) => {
             hostname = urlExists.host.replace('www.', '');
         }
         // then we remove the part after the dot from the hostname variable
+        // ex: repubblica.it becomes repubblica
         hostname = hostname.split('.')[0];
 
         // if all previous checks have passed we try to create a new entry to the DB
         const result = await Website.create({
             url: urlExists,
-            name: hostname,
+            siteName: hostname,
         });
         return result;
     } catch (err) {

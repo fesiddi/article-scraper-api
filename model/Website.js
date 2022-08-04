@@ -7,7 +7,7 @@ const websiteSchema = new Schema({
         required: true,
         unique: true,
     },
-    name: {
+    siteName: {
         type: String,
         required: true,
         unique: true,

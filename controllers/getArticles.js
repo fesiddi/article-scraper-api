@@ -5,7 +5,9 @@ const cheerio = require('cheerio');
 // this function search in the db for a record with siteName as a name property
 const findWebsiteRecord = async (siteName) => {
     try {
-        const foundWebsite = await Website.findOne({ name: siteName }).exec();
+        const foundWebsite = await Website.findOne({
+            siteName: siteName,
+        }).exec();
         // if no record is found we throw an Error
         if (!foundWebsite) {
             const siteError = new Error('Website not found in db');

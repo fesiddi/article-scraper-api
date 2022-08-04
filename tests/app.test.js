@@ -29,7 +29,7 @@ describe('API Endopoints Tests', () => {
             expect(response.body).toEqual(
                 expect.objectContaining({
                     url: 'http://www.ansa.it/',
-                    name: 'ansa',
+                    siteName: 'ansa',
                     id: expect.any(String),
                 })
             );
@@ -66,7 +66,7 @@ describe('API Endopoints Tests', () => {
                 expect.arrayContaining([
                     expect.objectContaining({
                         url: 'http://www.ansa.it/',
-                        name: 'ansa',
+                        siteName: 'ansa',
                         id: expect.any(String),
                     }),
                 ])
