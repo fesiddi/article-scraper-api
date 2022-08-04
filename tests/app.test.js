@@ -4,17 +4,18 @@ const Website = require('../model/Website');
 const { connectDB, disconnectDB } = require('../utils/dbConnection');
 const { extractArticlesFromHtml } = require('../controllers/getArticles');
 
-const api = request(app);
+beforeAll(async () => {
+    await connectDB();
+    await Website.deleteMany({});
+});
+
+afterAll(async () => {
+    await Website.deleteMany({});
+    await disconnectDB();
+});
 
 describe('API Endopoints Tests', () => {
-    beforeAll(async () => {
-        await connectDB();
-        await Website.deleteMany({});
-    });
-    afterAll(async () => {
-        await Website.deleteMany({});
-        await disconnectDB();
-    });
+    const api = request(app);
 
     describe('POST /api/websites', () => {
         it('Should post a new website url with valid data', async () => {
