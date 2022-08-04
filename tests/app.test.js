@@ -19,6 +19,7 @@ describe('API Endopoints Tests', () => {
 
     describe('POST /api/websites', () => {
         it('Should post a new website url with valid data', async () => {
+            await connectDB();
             const response = await api
                 .post('/api/websites')
                 .send({

@@ -24,7 +24,7 @@ const findWebsiteRecord = async (siteName) => {
 // foundArticles will be returned as an array of objects with
 // title: the article title containing the keyword
 // url: link at the article
-const extractArticlesFromHtml = (html, keyword) => {
+const extractArticlesFromHtml = (html, keyword, website) => {
     // first we load all html into cheerio parser
     const $ = cheerio.load(html);
     // array were found articles will be stored
@@ -39,7 +39,11 @@ const extractArticlesFromHtml = (html, keyword) => {
         // here cheerio will search for all <a tags containing specified keyword
         $(searchString).each((i, el) => {
             const title = $(el).text();
-            const url = $(el).attr('href');
+            let url = $(el).attr('href');
+            // Some articles href have no http prefix, if this is the case we add it using the website variable that store the website url
+            if (url.startsWith('http') === false) {
+                url = website + url;
+            }
             foundArticles.push({
                 title: title,
                 url: url,
@@ -58,7 +62,7 @@ const getArticles = async (siteName, keyword) => {
     // here we save the html from the response object
     const html = response.data;
     // then we pass the html and keyword to to extractArticles function
-    const articles = extractArticlesFromHtml(html, keyword);
+    const articles = extractArticlesFromHtml(html, keyword, website);
     return articles;
 };
 

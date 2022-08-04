@@ -9,6 +9,11 @@ router
     .get(async (req, res, next) => {
         try {
             websitesList = await getWebsites();
+            if (websitesList.length === 0) {
+                return res.status(200).json({
+                    NoData: `Sorry, websites database is empty`,
+                });
+            }
             return res.status(200).json(websitesList);
         } catch (err) {
             // passing error the to errorHandler middleware
