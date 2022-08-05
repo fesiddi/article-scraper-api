@@ -1,14 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const cors = require('cors');
 const errorHandler = require('./middleware/errorHandler');
-
-app.use(
-    cors({
-        // origin: '',
-    })
-);
 
 // middleware to handle json
 app.use(express.json());
