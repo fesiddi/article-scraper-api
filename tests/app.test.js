@@ -35,6 +35,23 @@ describe('API Endopoints Tests', () => {
                 })
             );
         });
+        it('Should post repubblica website if provided with this url http://www.repubblica.it/', async () => {
+            await connectDB();
+            const response = await api
+                .post('/api/websites')
+                .send({
+                    url: 'http://www.repubblica.it/',
+                })
+                .expect(201);
+
+            expect(response.body).toEqual(
+                expect.objectContaining({
+                    url: 'http://www.repubblica.it/',
+                    siteName: 'repubblica',
+                    id: expect.any(String),
+                })
+            );
+        });
         it('Should fail with status code 409 when data is already present in db', async () => {
             const response = await api
                 .post('/api/websites')
@@ -74,6 +91,32 @@ describe('API Endopoints Tests', () => {
             );
         });
     });
+    describe('DELETE /api/websites/:siteName', () => {
+        it('Should delete the repubblica website stored in the database', async () => {
+            const response = await api
+                .delete('/api/websites/repubblica')
+                .expect('Content-Type', /application\/json/)
+                .expect(200);
+            expect(response.body).toEqual(
+                expect.objectContaining({
+                    Success: 'Website repubblica successfully deleted!',
+                })
+            );
+        });
+    });
+    describe('DELETE /api/websites/:siteName', () => {
+        it('Should return 404 if website to delete is not found in the database', async () => {
+            const response = await api
+                .delete('/api/websites/repubblica')
+                .expect('Content-Type', /application\/json/)
+                .expect(404);
+            expect(response.body).toEqual(
+                expect.objectContaining({
+                    Error: "Can't delete repubblica. Website not found in database.",
+                })
+            );
+        });
+    });
 
     describe('GET /api/articles/?siteName=&keyword=', () => {
         it('Should return with 200 if siteName is in db and a keyword is provided', async () => {
@@ -92,25 +135,5 @@ describe('API Endopoints Tests', () => {
             const testUrl = '/api/articles/?siteName=ansa&keyword=';
             const response = await api.get(testUrl).expect(400);
         });
-    });
-});
-
-describe('Article Parser Tests', () => {
-    it('Should return with expectedOutput array', () => {
-        const html = require('./testHelper').mockHTML;
-        const expectedOutput = require('./testHelper').expectedArticles;
-        const result = extractArticlesFromHtml(html, 'bollettino');
-        expect(result).toEqual(expectedOutput);
-    });
-    it('Should return with expectedOutput array', () => {
-        const html = require('./testHelper').mockHTML;
-        const expectedOutput = require('./testHelper').expectedArticles;
-        const result = extractArticlesFromHtml(html, 'Bollettino');
-        expect(result).toEqual(expectedOutput);
-    });
-    it('Should return an empty array when no articles are found', () => {
-        const html = require('./testHelper').mockHTML;
-        const result = extractArticlesFromHtml(html, 'gelato');
-        expect(result).toEqual([]);
     });
 });
