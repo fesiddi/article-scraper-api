@@ -29,10 +29,14 @@ const extractArticlesFromHtml = (html, keyword, website) => {
     const $ = cheerio.load(html);
     // array were found articles will be stored
     const foundArticles = [];
-    // search strings with lowercase and capital case version of keyword
+    // search strings with lowercase, capital case and uppercase version of keyword
     const searchStrings = [
-        'a:contains("' + keyword + '")',
-        'a:contains("' + keyword[0].toUpperCase() + keyword.substring(1) + '")',
+        'a:contains("' + keyword.toLowerCase() + '")',
+        'a:contains("' +
+            keyword[0].toUpperCase() +
+            keyword.substring(1).toLowerCase() +
+            '")',
+        'a:contains("' + keyword.toUpperCase() + '")',
     ];
     // here we search lowercase keyword and capital case keyword mapping the searchStrings array
     for (const searchString of searchStrings) {
