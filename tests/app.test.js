@@ -2,7 +2,9 @@ const app = require('../app');
 const request = require('supertest');
 const Website = require('../model/Website');
 const { connectDB, disconnectDB } = require('../utils/dbConnection');
-const { extractArticlesFromHtml } = require('../controllers/getArticles');
+const {
+    extractArticlesFromHtml,
+} = require('../controllers/articles/getArticles');
 
 beforeAll(async () => {
     await connectDB();
@@ -125,7 +127,13 @@ describe('API Endopoints Tests', () => {
                 .get(testUrl)
                 .expect('Content-Type', /json/)
                 .expect(200);
-            expect(response.body).toEqual(expect.arrayContaining([]));
+        });
+        it("Should return with 200 if 'all' and a keyword is provided", async () => {
+            const testUrl = '/api/articles/?siteName=all&keyword=ferrari';
+            const response = await api
+                .get(testUrl)
+                .expect('Content-Type', /json/)
+                .expect(200);
         });
         it('Should fail with 404 when provided siteName is not in the db', async () => {
             const testUrl = '/api/articles/?siteName=anselmo&keyword=italia';
@@ -134,6 +142,16 @@ describe('API Endopoints Tests', () => {
         it('Should fail with 400 when no keyword is provided', async () => {
             const testUrl = '/api/articles/?siteName=ansa&keyword=';
             const response = await api.get(testUrl).expect(400);
+        });
+    });
+
+    describe('GET /api/articles/?siteName=all&keyword=', () => {
+        it("Should return with 200 if 'all' and a keyword is provided", async () => {
+            const testUrl = '/api/articles/?siteName=all&keyword=ferrari';
+            const response = await api
+                .get(testUrl)
+                .expect('Content-Type', /json/)
+                .expect(200);
         });
     });
 });

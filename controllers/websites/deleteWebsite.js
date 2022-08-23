@@ -1,4 +1,4 @@
-const Website = require('../model/Website');
+const Website = require('../../model/Website');
 
 const deleteWebsite = async (siteName) => {
     try {

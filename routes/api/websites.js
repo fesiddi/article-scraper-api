@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const postWebsite = require('../../controllers/postWebsite');
-const getWebsites = require('../../controllers/getWebsites');
-const deleteWebsite = require('../../controllers/deleteWebsite');
+const postWebsite = require('../../controllers/websites/postWebsite');
+const getWebsites = require('../../controllers/websites/getWebsites');
+const deleteWebsite = require('../../controllers/websites/deleteWebsite');
 
 router
     .route('/')
@@ -44,11 +44,9 @@ router.route('/:siteName').delete(async (req, res, next) => {
                     Success: `Website ${siteName} successfully deleted!`,
                 });
             }
-            return res
-                .status(404)
-                .json({
-                    Error: `Can't delete ${siteName}. Website not found in database.`,
-                });
+            return res.status(404).json({
+                Error: `Can't delete ${siteName}. Website not found in database.`,
+            });
         }
     } catch (err) {
         // passing error to the errorHandler middleware

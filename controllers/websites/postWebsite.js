@@ -1,4 +1,4 @@
-const Website = require('../model/Website');
+const Website = require('../../model/Website');
 const URL = require('url').URL;
 const axios = require('axios');
 

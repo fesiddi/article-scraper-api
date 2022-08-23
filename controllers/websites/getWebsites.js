@@ -1,4 +1,4 @@
-const Website = require('../model/Website');
+const Website = require('../../model/Website');
 
 const getWebsites = async () => {
     result = await Website.find({}).exec();
