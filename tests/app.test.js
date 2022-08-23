@@ -2,7 +2,9 @@ const app = require('../app');
 const request = require('supertest');
 const Website = require('../model/Website');
 const { connectDB, disconnectDB } = require('../utils/dbConnection');
-const { extractArticlesFromHtml } = require('../controllers/getArticles');
+const {
+    extractArticlesFromHtml,
+} = require('../controllers/articles/getArticles');
 
 beforeAll(async () => {
     await connectDB();
@@ -31,6 +33,23 @@ describe('API Endopoints Tests', () => {
                 expect.objectContaining({
                     url: 'http://www.ansa.it/',
                     siteName: 'ansa',
+                    id: expect.any(String),
+                })
+            );
+        });
+        it('Should post repubblica website if provided with this url http://www.repubblica.it/', async () => {
+            await connectDB();
+            const response = await api
+                .post('/api/websites')
+                .send({
+                    url: 'http://www.repubblica.it/',
+                })
+                .expect(201);
+
+            expect(response.body).toEqual(
+                expect.objectContaining({
+                    url: 'http://www.repubblica.it/',
+                    siteName: 'repubblica',
                     id: expect.any(String),
                 })
             );
@@ -74,6 +93,32 @@ describe('API Endopoints Tests', () => {
             );
         });
     });
+    describe('DELETE /api/websites/:siteName', () => {
+        it('Should delete the repubblica website stored in the database', async () => {
+            const response = await api
+                .delete('/api/websites/repubblica')
+                .expect('Content-Type', /application\/json/)
+                .expect(200);
+            expect(response.body).toEqual(
+                expect.objectContaining({
+                    Success: 'Website repubblica successfully deleted!',
+                })
+            );
+        });
+    });
+    describe('DELETE /api/websites/:siteName', () => {
+        it('Should return 404 if website to delete is not found in the database', async () => {
+            const response = await api
+                .delete('/api/websites/repubblica')
+                .expect('Content-Type', /application\/json/)
+                .expect(404);
+            expect(response.body).toEqual(
+                expect.objectContaining({
+                    Error: "Can't delete repubblica. Website not found in database.",
+                })
+            );
+        });
+    });
 
     describe('GET /api/articles/?siteName=&keyword=', () => {
         it('Should return with 200 if siteName is in db and a keyword is provided', async () => {
@@ -82,7 +127,13 @@ describe('API Endopoints Tests', () => {
                 .get(testUrl)
                 .expect('Content-Type', /json/)
                 .expect(200);
-            expect(response.body).toEqual(expect.arrayContaining([]));
+        });
+        it("Should return with 200 if 'all' and a keyword is provided", async () => {
+            const testUrl = '/api/articles/?siteName=all&keyword=ferrari';
+            const response = await api
+                .get(testUrl)
+                .expect('Content-Type', /json/)
+                .expect(200);
         });
         it('Should fail with 404 when provided siteName is not in the db', async () => {
             const testUrl = '/api/articles/?siteName=anselmo&keyword=italia';
@@ -93,18 +144,14 @@ describe('API Endopoints Tests', () => {
             const response = await api.get(testUrl).expect(400);
         });
     });
-});
 
-describe('Article Parser Tests', () => {
-    it('Should return with expectedOutput array', () => {
-        const html = require('./testHelper').mockHTML;
-        const expectedOutput = require('./testHelper').expectedArticles;
-        const result = extractArticlesFromHtml(html, 'bollettino');
-        expect(result).toEqual(expectedOutput);
-    });
-    it('Should return an empty array when no articles are found', () => {
-        const html = require('./testHelper').mockHTML;
-        const result = extractArticlesFromHtml(html, 'gelato');
-        expect(result).toEqual([]);
+    describe('GET /api/articles/?siteName=all&keyword=', () => {
+        it("Should return with 200 if 'all' and a keyword is provided", async () => {
+            const testUrl = '/api/articles/?siteName=all&keyword=ferrari';
+            const response = await api
+                .get(testUrl)
+                .expect('Content-Type', /json/)
+                .expect(200);
+        });
     });
 });
