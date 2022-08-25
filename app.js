@@ -18,6 +18,10 @@ app.use('/', express.static(path.join(__dirname, '/public')));
 
 // home route
 app.use('/', require('./routes/home'));
+// register user route
+app.use('/register', require('./routes/register'));
+// user authorization route
+app.use('/auth', require('./routes/auth'));
 
 // api routes
 app.use('/api/articles', require('./routes/api/articles'));
