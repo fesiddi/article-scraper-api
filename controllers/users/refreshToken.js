@@ -5,15 +5,18 @@ require('dotenv').config();
 
 const handleRefreshToken = async (req, res, next) => {
     const cookies = req.cookies;
-    // if there cookies do not exists or there isn't jwt cookie
+    // if cookies do not exists or there isn't jwt cookie
     if (!cookies?.jwt) {
-        return res.status(401);
+        return res.sendStatus(401); // Unauthorized
     }
     try {
         const refreshToken = cookies.jwt;
-        const foundUser = await User.find({ refreshToken: refreshToken });
+        console.log(refreshToken);
+        const foundUser = await User.findOne({
+            refreshToken: refreshToken,
+        }).exec();
         if (!foundUser) {
-            return res.status(403); // Forbidden
+            return res.sendStatus(403); // Forbidden
         }
         // if refreshToken is found in db we evaluate the jwt
         jwt.verify(
@@ -30,10 +33,11 @@ const handleRefreshToken = async (req, res, next) => {
                     process.env.ACCESS_TOKEN_SECRET,
                     { expiresIn: '30s' }
                 );
+                res.json({ accessToken });
             }
         );
-        const match = await bcrypt.compare(password, foundUser.password);
     } catch (err) {
+        console.log(err);
         next(err);
     }
 };

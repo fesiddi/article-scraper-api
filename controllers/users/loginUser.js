@@ -4,18 +4,18 @@ const User = require('../../model/User');
 require('dotenv').config();
 
 const handleLogin = async (req, res, next) => {
-    const { user, password } = req.body;
-    if (!user || !password) {
+    const { username, password } = req.body;
+    if (!username || !password) {
         return res
             .status(400)
             .json({ error: 'Username and password required!' });
     }
     try {
-        const foundUser = await User.find({ username: user });
+        const foundUser = await User.findOne({ username: username }).exec();
         if (!foundUser) {
             return res
                 .status(401)
-                .json({ Error: `Username ${user} not found` });
+                .json({ Error: `Username ${username} not found` });
         }
         // if user is found in db we evaluate the password
         const match = await bcrypt.compare(password, foundUser.password);
@@ -40,16 +40,21 @@ const handleLogin = async (req, res, next) => {
                 { username: foundUser.username },
                 { refreshToken: refreshToken }
             );
+            // create secure cookie with refresh token
             res.cookie('jwt', refreshToken, {
                 httpOnly: true,
+                // disable secure option if in development
+                // secure: true,
+                sameSite: 'None',
                 maxAge: 24 * 60 * 60 * 1000,
             });
             // access token will be captured by the frontend
-            return res.status(200).json({ accessToken });
+            res.json({ accessToken });
         } else {
-            return res.status(401); // Unauthorized
+            return res.sendStatus(401); // Unauthorized
         }
     } catch (err) {
+        console.log(err);
         next(err);
     }
 };

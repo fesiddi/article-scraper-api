@@ -4,7 +4,7 @@ require('dotenv').config();
 const verifyJWT = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     if (!authHeader) {
-        return res.status(401); //
+        return res.sendStatus(401); // Unauthorized
     }
     // splitting token string and taking only the part after 'bearer'
     const token = authHeader.split(' ')[1];
