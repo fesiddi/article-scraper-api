@@ -16,8 +16,8 @@ const logoutUser = async (req, res, next) => {
         if (!foundUser) {
             res.clearCookie('jwt', {
                 httpOnly: true,
-                // secure: true,
-                maxAge: 24 * 60 * 60 * 1000,
+                secure: true,
+                sameSite: 'None',
             });
             res.sendStatus(204);
         }
@@ -28,8 +28,8 @@ const logoutUser = async (req, res, next) => {
         );
         res.clearCookie('jwt', {
             httpOnly: true,
-            // secure: true,
-            maxAge: 24 * 60 * 60 * 1000,
+            secure: true,
+            sameSite: 'None',
         });
         return res.sendStatus(204);
     } catch (err) {

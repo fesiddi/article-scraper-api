@@ -11,7 +11,6 @@ const handleRefreshToken = async (req, res, next) => {
     }
     try {
         const refreshToken = cookies.jwt;
-        console.log(refreshToken);
         const foundUser = await User.findOne({
             refreshToken: refreshToken,
         }).exec();
@@ -28,7 +27,10 @@ const handleRefreshToken = async (req, res, next) => {
                 }
                 const accessToken = jwt.sign(
                     {
-                        username: decoded.username,
+                        UserInfo: {
+                            username: decoded.username,
+                            role: decoded.role,
+                        },
                     },
                     process.env.ACCESS_TOKEN_SECRET,
                     { expiresIn: '30s' }

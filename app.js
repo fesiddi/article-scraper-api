@@ -33,6 +33,7 @@ app.use('/logout', require('./routes/logout'));
 // JTW middleware
 app.use(verifyJWT);
 // api routes
+app.use('/api/index', require('./routes/api/index'));
 app.use('/api/articles', require('./routes/api/articles'));
 app.use('/api/websites', require('./routes/api/websites'));
 
