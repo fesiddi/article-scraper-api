@@ -14,51 +14,21 @@
         <title>Article Scraper API</title>
     </head>
     <body>
-        <h2>Article Scraper API Endpoints</h2>
-        <h4>GET /api/websites</h4>
-        <p>
-            Retrieve a list of websites where it is possible to search for
-            articles.
-        </p>
-        <form action="/api/websites" method="get">
-            <button type="submit">Get Websites List</button>
+        <h2>Article Scraper API Home</h2>
+        <h4>LOGIN</h4>
+        <p>Login to the API service</p>
+        <form action="/auth" method="post">
+            <input type="email" name="username" id="username" />
+            <input type="password" name="password" id="password" />
+            <button type="submit">Login</button>
         </form>
         <br />
-        <h4>GET /api/articles/?siteName=value&keyword=value</h4>
-        <p>
-            Search for articles in the website provided as siteName
-            query-string. Will return a list of articles that have the keyword
-            in the article heading.
-        </p>
-        <form action="/api/articles/" method="get">
-            <input
-                type="text"
-                name="siteName"
-                id="siteName"
-                placeholder="siteName ex: repubblica"
-            />
-            <input
-                type="text"
-                name="keyword"
-                id="keyword"
-                placeholder="keyword"
-            />
-            <button type="submit">Get Articles</button>
-        </form>
-        <br />
-        <h4>POST /api/websites</h4>
-        <p>
-            Add a new website to the DB. The database contains websites where
-            articles can be searched.
-        </p>
-        <form action="/api/websites" method="post">
-            <input
-                type="url"
-                name="url"
-                id="url"
-                placeholder="ex: http://ansa.it"
-            />
-            <button type="submit">Post Website Url</button>
+        <h4>REGISTER</h4>
+        <p>You need to be registered to use the article scraper api.</p>
+        <form action="/register" method="post">
+            <input type="email" name="username" id="username" />
+            <input type="password" name="password" id="password" />
+            <button type="submit">Register</button>
         </form>
     </body>
 </html>

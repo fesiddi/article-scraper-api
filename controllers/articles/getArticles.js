@@ -1,23 +1,20 @@
 const Website = require('../../model/Website');
+const { handleWebsites } = require('../websites/getWebsites');
 const axios = require('axios');
 const cheerio = require('cheerio');
 
 // this function search in the db for a record with siteName as a name property
 const findWebsiteRecord = async (siteName) => {
-    try {
-        const foundWebsite = await Website.findOne({
-            siteName: siteName,
-        }).exec();
-        // if no record is found we throw an Error
-        if (!foundWebsite) {
-            const siteError = new Error('Website not found in db');
-            siteError.name = 'siteError';
-            throw siteError;
-        }
-        return foundWebsite.url;
-    } catch (err) {
-        throw err;
+    const foundWebsite = await Website.findOne({
+        siteName: siteName,
+    }).exec();
+    // if no record is found we throw an Error
+    if (!foundWebsite) {
+        const siteError = new Error('Website not found in db');
+        siteError.name = 'siteError';
+        throw siteError;
     }
+    return foundWebsite.url;
 };
 
 // function to extract articles from an html string
@@ -58,7 +55,7 @@ const extractArticlesFromHtml = (html, keyword, website) => {
 };
 
 // main function for getting articles from with a specific keyword from a website in the db
-const getArticles = async (siteName, keyword) => {
+const handleArticles = async (siteName, keyword) => {
     // calling findWebsiteRecord function defined before
     const website = await findWebsiteRecord(siteName);
     // using axios to make a get request and save the response object
@@ -68,6 +65,42 @@ const getArticles = async (siteName, keyword) => {
     // then we pass the html and keyword to to extractArticles function
     const articles = extractArticlesFromHtml(html, keyword, website);
     return articles;
+};
+
+const handleAllArticles = async (keyword) => {
+    let allArticles = [];
+    const websites = await handleWebsites();
+    for (const website of websites) {
+        const foundArticles = await handleArticles(website.siteName, keyword);
+        allArticles.push(...foundArticles);
+    }
+    return allArticles;
+};
+
+const getArticles = async (req, res, next) => {
+    // variable were all found articles will be stored
+    let result;
+    const siteName = req.query.siteName.toLowerCase();
+    const keyword = req.query.keyword;
+    if (!siteName || !keyword) {
+        return res.status(400).json({ Error: 'A parameter is missing' });
+    }
+    try {
+        if (siteName === 'all') {
+            result = await handleAllArticles(keyword);
+        } else {
+            result = await handleArticles(siteName, keyword);
+        }
+        if (result.length === 0) {
+            return res.status(200).json({
+                NoData: `Sorry, no articles with ${keyword} keyword were found`,
+            });
+        }
+        return res.status(200).json(result);
+    } catch (err) {
+        // passing error the to errorHandler middleware
+        next(err);
+    }
 };
 
 module.exports = { getArticles, extractArticlesFromHtml };

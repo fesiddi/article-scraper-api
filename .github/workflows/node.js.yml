@@ -10,9 +10,10 @@ on:
         branches: ['main']
 
 env:
-    DB_URI: ${{secrets.DB_URI}}
     TEST_DB_URI: ${{secrets.TEST_DB_URI}}
     PORT: ${{secrets.PORT}}
+    ACCESS_TOKEN_SECRET: ${{secrets.ACCESS_TOKEN_SECRET}}
+    REFRESH_TOKEN_SECRET: ${{secrets.REFRESH_TOKEN_SECRET}}
 jobs:
     build:
         runs-on: ubuntu-latest
