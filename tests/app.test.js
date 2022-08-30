@@ -128,13 +128,7 @@ describe('API Endopoints Tests', () => {
                 .expect('Content-Type', /json/)
                 .expect(200);
         });
-        it("Should return with 200 if 'all' and a keyword is provided", async () => {
-            const testUrl = '/api/articles/?siteName=all&keyword=ferrari';
-            const response = await api
-                .get(testUrl)
-                .expect('Content-Type', /json/)
-                .expect(200);
-        });
+
         it('Should fail with 404 when provided siteName is not in the db', async () => {
             const testUrl = '/api/articles/?siteName=anselmo&keyword=italia';
             const response = await api.get(testUrl).expect(404);

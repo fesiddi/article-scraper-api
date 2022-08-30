@@ -33,7 +33,7 @@ const stringToUrl = (urlString) => {
 };
 
 // function to post the website url to the database
-const postWebsite = async (website) => {
+const handlePost = async (website) => {
     // first we convert website string to an url object
     const siteUrl = stringToUrl(website);
     try {
@@ -56,6 +56,20 @@ const postWebsite = async (website) => {
         return result;
     } catch (err) {
         throw err;
+    }
+};
+
+const postWebsite = async (req, res, next) => {
+    const siteUrl = req.body.url;
+    if (!siteUrl) {
+        return res.status(400).json({ error: 'Url field is missing' });
+    }
+    try {
+        const result = await handlePost(siteUrl);
+        return res.status(201).json(result);
+    } catch (err) {
+        // passing error the to errorHandler middleware
+        next(err);
     }
 };
 
