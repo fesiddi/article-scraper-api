@@ -6,7 +6,10 @@ const postWebsite = require('../../controllers/websites/postWebsite');
 const { getWebsites } = require('../../controllers/websites/getWebsites');
 const deleteWebsite = require('../../controllers/websites/deleteWebsite');
 
-router.route('/').get(getWebsites).post(postWebsite);
+router
+    .route('/')
+    .get(getWebsites)
+    .post(verifyRole(ROLES_LIST.Admin), postWebsite);
 
 router.route('/:siteName').delete(verifyRole(ROLES_LIST.Admin), deleteWebsite);
 

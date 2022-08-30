@@ -98,7 +98,6 @@ const getArticles = async (req, res, next) => {
         }
         return res.status(200).json(result);
     } catch (err) {
-        console.log(err.stack);
         // passing error the to errorHandler middleware
         next(err);
     }

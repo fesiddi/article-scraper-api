@@ -5,6 +5,7 @@ const User = require('../model/User');
 const { connectDB, disconnectDB } = require('../utils/dbConnection');
 
 let accessToken = '';
+let cookie;
 
 beforeAll(async () => {
     await connectDB();
@@ -31,6 +32,7 @@ describe('Auth Endpoints Tests', () => {
                     Success: 'New username testuser created!',
                 })
             );
+            await User.updateOne({ username: 'testuser' }, { role: 2507 });
         });
         it('Should not register a user if already present in db', async () => {
             const response = await api
@@ -52,6 +54,7 @@ describe('Auth Endpoints Tests', () => {
                 .send({ username: 'testuser', password: 'test123' })
                 .expect(200);
             accessToken = response.body.accessToken;
+            cookie = response.headers['set-cookie'];
             expect(response.body).toEqual(
                 expect.objectContaining({
                     accessToken: accessToken,
@@ -71,6 +74,42 @@ describe('Auth Endpoints Tests', () => {
                 .expect(400);
         });
     });
+    describe('/refresh route tests', () => {
+        it('Should fail with 401 to update refreshToken if not provided in req.cookie', async () => {
+            const response = await api.get('/refresh').expect(401);
+        });
+        it('Should fail with 403 if cookie is provided but user not found in db or invalid token', async () => {
+            const response = await api
+                .get('/refresh')
+                .set('cookie', 'jwt=randominvalidtoken')
+                .expect(403);
+        });
+        it('Should return 200 and a new accessToken if valid cookie provided', async () => {
+            const response = await api
+                .get('/refresh')
+                .set('cookie', cookie)
+                .expect(200);
+            const newAccessToken = response.body.accessToken;
+            expect(response.body).toEqual(
+                expect.objectContaining({
+                    accessToken: newAccessToken,
+                })
+            );
+        });
+    });
+    describe('/logout route tests', () => {
+        it('Should return with 204 if cookie is not provided', async () => {
+            const response = await api.get('/logout').expect(204);
+        });
+        it('Should delete user refreshToken if valid cookie is provided', async () => {
+            const response = await api
+                .get('/logout')
+                .set('cookie', cookie)
+                .expect(204);
+            const updatedUser = await User.findOne({ username: 'testuser' });
+            expect(updatedUser.refreshToken).toEqual('');
+        });
+    });
 });
 
 describe('API Endopoints Tests', () => {
@@ -78,7 +117,6 @@ describe('API Endopoints Tests', () => {
 
     describe('POST /api/websites', () => {
         it('Should post a new website url with valid data', async () => {
-            await connectDB();
             const response = await api
                 .post('/api/websites')
                 .set('Authorization', `Bearer ${accessToken}`)
