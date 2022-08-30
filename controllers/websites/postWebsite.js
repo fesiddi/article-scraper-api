@@ -6,7 +6,7 @@ const axios = require('axios');
 const verifyUrlExists = async (website) => {
     try {
         const response = await axios.get(website.toString(), {
-            timeout: 1500,
+            timeout: 3000,
         });
         if (response.status === 200) {
             return website;
