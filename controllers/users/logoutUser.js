@@ -13,19 +13,13 @@ const logoutUser = async (req, res, next) => {
         const foundUser = await User.findOne({
             refreshToken: refreshToken,
         }).exec();
-        if (!foundUser) {
-            res.clearCookie('jwt', {
-                httpOnly: true,
-                sameSite: 'None',
-                secure: true,
-            });
-            return res.sendStatus(204);
+        if (foundUser) {
+            // if refresh token is found in db, we delete it
+            await User.updateOne(
+                { username: foundUser.username },
+                { refreshToken: '' }
+            );
         }
-        // if refresh token is found in db, we delete it
-        await User.updateOne(
-            { username: foundUser.username },
-            { refreshToken: '' }
-        );
         res.clearCookie('jwt', {
             httpOnly: true,
             secure: true,
