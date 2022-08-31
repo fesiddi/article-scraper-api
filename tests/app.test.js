@@ -2,7 +2,7 @@ const app = require('../app');
 const request = require('supertest');
 const Website = require('../model/Website');
 const User = require('../model/User');
-const { connectDB, disconnectDB } = require('../utils/dbConnection');
+const { connectDB, disconnectDB } = require('../utils/memoryDb');
 
 let accessToken = '';
 let cookie;
@@ -32,6 +32,10 @@ describe('Auth Endpoints Tests', () => {
                     Success: 'New username testuser created!',
                 })
             );
+            const savedUser = await User.findOne({
+                username: 'testuser',
+            }).exec();
+            expect(savedUser.username).toEqual('testuser');
             await User.updateOne({ username: 'testuser' }, { role: 2507 });
         });
         it('Should not register a user if already present in db', async () => {
@@ -99,11 +103,11 @@ describe('Auth Endpoints Tests', () => {
     });
     describe('/logout route tests', () => {
         it('Should return with 204 if cookie is not provided', async () => {
-            const response = await api.get('/logout').expect(204);
+            const response = await api.post('/logout').expect(204);
         });
         it('Should delete user refreshToken if valid cookie is provided', async () => {
             const response = await api
-                .get('/logout')
+                .post('/logout')
                 .set('cookie', cookie)
                 .expect(204);
             const updatedUser = await User.findOne({ username: 'testuser' });
@@ -134,7 +138,6 @@ describe('API Endopoints Tests', () => {
             );
         });
         it('Should post repubblica website if provided with this url http://www.repubblica.it/', async () => {
-            await connectDB();
             const response = await api
                 .post('/api/websites')
                 .set('Authorization', `Bearer ${accessToken}`)
