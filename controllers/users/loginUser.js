@@ -45,11 +45,11 @@ const handleLogin = async (req, res, next) => {
             );
             // create secure cookie with refresh token
             res.cookie('jwt', refreshToken, {
-                httpOnly: true,
+                httpOnly: true, // only accessible by a web server
                 // disable secure option if in development
-                // secure: true,
-                sameSite: 'None',
-                maxAge: 24 * 60 * 60 * 1000,
+                // secure: true, // https
+                sameSite: 'None', // cross-site cookie
+                maxAge: 24 * 60 * 60 * 1000, // same of refreshToken
             });
             // access token will be captured by the frontend
             res.json({ accessToken });
