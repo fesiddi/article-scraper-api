@@ -1,9 +1,19 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const cors = require('cors');
+const corsOptions = require('./utils/corsOptions');
 const errorHandler = require('./middleware/errorHandler');
 const verifyJWT = require('./middleware/verifyJWT');
 const cookieParser = require('cookie-parser');
+const credentials = require('./middleware/credentials');
+
+// Handle options credentials check - before CORS!
+// and fetch cookies credentials requirement
+app.use(credentials);
+
+// Cross Origin Resource Sharing
+app.use(cors(corsOptions));
 
 // middleware to handle json
 app.use(express.json());

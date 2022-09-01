@@ -4,6 +4,7 @@ const User = require('../../model/User');
 require('dotenv').config();
 
 const handleLogin = async (req, res, next) => {
+    console.log('login triggered');
     const { username, password } = req.body;
     if (!username || !password) {
         return res
