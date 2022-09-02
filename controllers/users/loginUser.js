@@ -4,7 +4,6 @@ const User = require('../../model/User');
 require('dotenv').config();
 
 const handleLogin = async (req, res, next) => {
-    console.log('login triggered');
     const { username, password } = req.body;
     if (!username || !password) {
         return res
@@ -30,7 +29,7 @@ const handleLogin = async (req, res, next) => {
                     },
                 },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '30s' }
+                { expiresIn: '15m' }
             );
             const refreshToken = jwt.sign(
                 {
@@ -47,8 +46,7 @@ const handleLogin = async (req, res, next) => {
             // create secure cookie with refresh token
             res.cookie('jwt', refreshToken, {
                 httpOnly: true, // only accessible by a web server
-                // disable secure option if in development
-                // secure: true, // https
+                secure: true, // https
                 sameSite: 'None', // cross-site cookie
                 maxAge: 24 * 60 * 60 * 1000, // same of refreshToken
             });

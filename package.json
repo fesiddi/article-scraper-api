@@ -9,7 +9,7 @@
         "build:ui": "rm -rf build && cd ../frontend/client/ && npm run build && cp -r build ../../article-scraper-api",
         "test": "cross-env NODE_ENV=test jest --verbose --forceExit",
         "deploy": "git push heroku main",
-        "deploy:full": "npm build:ui && deploy",
+        "deploy:full": "npm build:ui && npm run deploy",
         "logs:prod": "heroku logs --tail"
     },
     "repository": {
