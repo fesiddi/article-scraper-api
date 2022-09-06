@@ -2,7 +2,6 @@ const User = require('../../model/User');
 const bcrypt = require('bcrypt');
 
 const registerUser = async (req, res, next) => {
-    console.log(req.body);
     const { username, password, passwordConf } = req.body;
     if (!username || !password || !passwordConf) {
         return res
