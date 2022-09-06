@@ -25,7 +25,11 @@ describe('Auth Endpoints Tests', () => {
         it('Should register a new user saving it in the db', async () => {
             const response = await api
                 .post('/register')
-                .send({ username: 'testuser', password: 'test123' })
+                .send({
+                    username: 'testuser',
+                    password: 'test123',
+                    passwordConf: 'test123',
+                })
                 .expect(201);
             expect(response.body).toEqual(
                 expect.objectContaining({
@@ -41,13 +45,21 @@ describe('Auth Endpoints Tests', () => {
         it('Should not register a user if already present in db', async () => {
             const response = await api
                 .post('/register')
-                .send({ username: 'testuser', password: 'test123' })
+                .send({
+                    username: 'testuser',
+                    password: 'test123',
+                    passwordConf: 'test123',
+                })
                 .expect(409);
         });
         it('Should not register a user if a required field is missing in the req.body', async () => {
             const response = await api
                 .post('/register')
-                .send({ username: '', password: 'test123' })
+                .send({
+                    username: '',
+                    password: 'test123',
+                    passwordConf: 'test123',
+                })
                 .expect(400);
         });
     });

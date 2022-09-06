@@ -16,11 +16,13 @@ const errorHandler = (error, req, res, next) => {
         return res.status(404).json({
             Error: error.message,
         });
-    } else {
-        return res.status(400).json({
-            Error: error.message,
-        });
     }
+    // else {
+    //     return res.status(400).json({
+    //         Error: error.message,
+    //     });
+    // }
+    next(error);
 };
 
 module.exports = errorHandler;
