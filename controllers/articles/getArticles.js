@@ -77,6 +77,15 @@ const handleAllArticles = async (keyword) => {
     return allArticles;
 };
 
+const removeDuplicateArticles = (articles) => {
+    const uniqueArticles = Array.from(
+        new Set(articles.map((article) => article.url))
+    ).map((url) => {
+        return articles.find((article) => article.url === url);
+    });
+    return uniqueArticles;
+};
+
 const getArticles = async (req, res, next) => {
     // variable were all found articles will be stored
     let result;
@@ -96,6 +105,7 @@ const getArticles = async (req, res, next) => {
                 NoData: `Sorry, no articles with ${keyword} keyword were found`,
             });
         }
+        result = removeDuplicateArticles(result);
         return res.status(200).json(result);
     } catch (err) {
         // passing error the to errorHandler middleware

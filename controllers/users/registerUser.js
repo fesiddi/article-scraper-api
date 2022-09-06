@@ -2,8 +2,9 @@ const User = require('../../model/User');
 const bcrypt = require('bcrypt');
 
 const registerUser = async (req, res, next) => {
-    const { username, password, passwordconf } = req.body;
-    if (!username || !password || !passwordconf) {
+    console.log(req.body);
+    const { username, password, passwordConf } = req.body;
+    if (!username || !password || !passwordConf) {
         return res
             .status(400)
             .json({ Error: 'Username and password required!' });
@@ -14,7 +15,7 @@ const registerUser = async (req, res, next) => {
         return res.status(409).json({ Error: 'Conflict' });
     }
     // verify if password match between the two input fields
-    if (password !== passwordconf) {
+    if (password !== passwordConf) {
         return res.status(400).json({ Error: 'Passwords must match!' });
     }
     try {
